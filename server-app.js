@@ -41,7 +41,7 @@ app.post('/saveuniversity', function (req, res) {
         }//end if
 
         //connect to mongodb successfully
-        var dbo = db.db("w_li");
+        var dbo = db.db(database);
         dbo.collection("university").insertOne(university, function (err, res) {
             if (err) throw err;
             console.log("1 document inserted");
@@ -49,7 +49,7 @@ app.post('/saveuniversity', function (req, res) {
         });
 
     });
-    res.send("post test");
+
 });
 
 // query list of university
@@ -60,10 +60,7 @@ app.get('/queryuniversitylist', function (req, res) {
             throw error;
         }//end if
 
-        /**
-        *  code if successfully accessing the db!!
-        */
-        var dbo = db.db("w_li");
+        var dbo = db.db(database);
         dbo.collection("university").find({}).toArray(function (err, result) {
             if (err) throw err;
             console.log(result);
@@ -72,7 +69,27 @@ app.get('/queryuniversitylist', function (req, res) {
         });
 
     });
-    // res.send("testtest");
+
+});
+
+// query university by name
+app.get('/find/:name', function (req, res) {
+    mongodb.connect(connectionString, function (error, db) {
+
+        if (error) {
+            throw error;
+        }//end if
+
+        var dbo = db.db(database);
+        dbo.collection("university").findOne({}, function (err, result) {
+            if (err) throw err;
+            console.log(result.name);
+            res.send(result);
+            db.close();
+        });
+
+    });
+
 });
 
 // delete university
@@ -85,7 +102,7 @@ app.delete('/delete/:name', (req, res) => {
         }//end if
 
         // access to mongodb successfully
-        var dbo = db.db("w_li");
+        var dbo = db.db(database);
         var universityquery = { name: universityName };
         dbo.collection("university").deleteOne(universityquery, function (err, obj) {
             if (err) throw err;
