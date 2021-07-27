@@ -1,12 +1,16 @@
 var express = require('express');
-var mongodb = require('mongodb');
+var mongodb = require('mongodb').MongoClient;
 
-const SERVER_PORT = 27017; //give your port
+//my port
+const SERVER_PORT = 8128;
+// mongo user name
 var user = 'w_li1';
+// password
 var password = 'A00445457';
+// database
 var database = 'w_li';
 
-//These should not change, unless the server spec changes
+//mongo ip and port
 //var host = '127.0.0.1';
 var host = '192.168.75.129';
 var port = '27017'; // Default MongoDB port for all the students
@@ -14,32 +18,93 @@ var port = '27017'; // Default MongoDB port for all the students
 // Now create a connection String to be used for the mongo access
 var connectionString = 'mongodb://' + user + ':' + password + '@' +
     host + ':' + port + '/' + database;
-//will create: 
-// mongodb://dk_govindaraj:A00421724@127.0.0.1:27017/dk_govindaraj
 
-//now connect to the db
-mongodb.connect(connectionString, function (error, db) {
-
-    if (error) {
-        throw error;
-    }//end if
-
-    /**
-    *  code if successfully accessing the db!!
-    */
-    console.log("login mongo successfully")
-
-});
 
 
 
 
 var app = express();
+// add middleware for json interpret
+app.use(express.json());
+app.use(express.urlencoded());
 
-app.get('/test', function (req, res) {
-    res.send("testtest");
+
+
+// save new university
+app.post('/saveuniversity', function (req, res) {
+    var university = req.body;
+    console.log(university);
+    mongodb.connect(connectionString, function (error, db) {
+
+        if (error) {
+            throw error;
+        }//end if
+
+        //connect to mongodb successfully
+        var dbo = db.db("w_li");
+        dbo.collection("university").insertOne(university, function (err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+        });
+
+    });
+    res.send("post test");
 });
 
-app.listen(3000);
+// query list of university
+app.get('/queryuniversitylist', function (req, res) {
+    mongodb.connect(connectionString, function (error, db) {
 
-console.log('listen 3000');
+        if (error) {
+            throw error;
+        }//end if
+
+        /**
+        *  code if successfully accessing the db!!
+        */
+        var dbo = db.db("w_li");
+        dbo.collection("university").find({}).toArray(function (err, result) {
+            if (err) throw err;
+            console.log(result);
+            res.send(result);
+            db.close();
+        });
+
+    });
+    // res.send("testtest");
+});
+
+// delete university
+app.delete('/delete/:name', (req, res) => {
+    let universityName = req.params.name;
+    mongodb.connect(connectionString, function (error, db) {
+
+        if (error) {
+            throw error;
+        }//end if
+
+        // access to mongodb successfully
+        var dbo = db.db("w_li");
+        var universityquery = { name: universityName };
+        dbo.collection("university").deleteOne(universityquery, function (err, obj) {
+            if (err) throw err;
+            if (obj.deletedCount < 1) {
+                console.log("no university deleted");
+                res.send("no university deleted");
+            } else {
+                console.log("1 document deleted");
+                res.send("1 university deleted");
+            }
+
+            db.close();
+        });
+
+    });
+    // res.send("no university was deleted");
+});
+
+
+app.listen(SERVER_PORT);
+
+console.log('listen ' + SERVER_PORT);
