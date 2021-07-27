@@ -42,9 +42,10 @@ app.post('/saveuniversity', function (req, res) {
 
         //connect to mongodb successfully
         var dbo = db.db(database);
-        dbo.collection("university").insertOne(university, function (err, res) {
+        dbo.collection("university").insertOne(university, function (err, response) {
             if (err) throw err;
             console.log("1 document inserted");
+            res.send(response);
             db.close();
         });
 
@@ -74,6 +75,8 @@ app.get('/queryuniversitylist', function (req, res) {
 
 // query university by name
 app.get('/find/:name', function (req, res) {
+    let universityName = req.params.name;
+    var universityquery = { name: universityName };
     mongodb.connect(connectionString, function (error, db) {
 
         if (error) {
@@ -81,10 +84,16 @@ app.get('/find/:name', function (req, res) {
         }//end if
 
         var dbo = db.db(database);
-        dbo.collection("university").findOne({}, function (err, result) {
+        dbo.collection("university").findOne(universityquery, function (err, result) {
             if (err) throw err;
-            console.log(result.name);
-            res.send(result);
+            if (result == null) {
+                console.log("not find any university named " + universityName);
+                res.send("not find any university named " + universityName);
+            } else {
+                console.log(result.name);
+                res.send(result);
+            }
+
             db.close();
         });
 
@@ -95,6 +104,7 @@ app.get('/find/:name', function (req, res) {
 // delete university
 app.delete('/delete/:name', (req, res) => {
     let universityName = req.params.name;
+    var universityquery = { name: universityName };
     mongodb.connect(connectionString, function (error, db) {
 
         if (error) {
@@ -103,7 +113,7 @@ app.delete('/delete/:name', (req, res) => {
 
         // access to mongodb successfully
         var dbo = db.db(database);
-        var universityquery = { name: universityName };
+
         dbo.collection("university").deleteOne(universityquery, function (err, obj) {
             if (err) throw err;
             if (obj.deletedCount < 1) {
