@@ -1,5 +1,6 @@
 var express = require('express');
 var mongodb = require('mongodb').MongoClient;
+var cors = require('cors')
 
 //my port
 const SERVER_PORT = 8128;
@@ -30,6 +31,7 @@ var app = express();
 // add middleware for json interpret
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cors())
 
 
 
