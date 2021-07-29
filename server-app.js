@@ -3,6 +3,9 @@ var mongodb = require('mongodb').MongoClient;
 
 //my port
 const SERVER_PORT = 8128;
+//var SERVER_URL = 'http://dev.cs.smu.ca:8128';
+var SERVER_URL = 'http://localhost:8128';
+
 // mongo user name
 var user = 'w_li1';
 // password
@@ -50,7 +53,6 @@ app.post('/saveuniversity', function (req, res) {
         });
 
     });
-
 });
 
 // query list of university
