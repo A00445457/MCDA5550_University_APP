@@ -145,7 +145,7 @@ app.post('/delete/:name', (req, res) => {
         });
 
     });
-    // res.send("no university was deleted");
+
 });
 
 
