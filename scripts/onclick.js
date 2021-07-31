@@ -4,7 +4,6 @@ var SERVER_URL = 'http://localhost:8128';
 
 function saveInformation() {
     //check if input information is valid
-    debugger;
     if (validateUniversityInfo()) {
         //create an university
         var university = {
@@ -15,7 +14,6 @@ function saveInformation() {
         var test = { name: "John", age: 30, city: "New York" };
         var parameter1 = JSON.stringify(test);
         var parameter = JSON.stringify(university);
-        debugger;
         //now send the request
         $.post(SERVER_URL + "/saveuniversity",
             university,
@@ -86,7 +84,6 @@ function validateUniversityInfo() {
 }
 
 function searchInfo() {
-    debugger;
     //validate search input
     var universityName = $("#search").val().replace(/^\s+|\s+$/g, "");
 
@@ -115,7 +112,6 @@ function searchInfo() {
 
 //delete input university in database
 function deleteInformation() {
-    debugger;
     if (validateUniversityInfo()) {
         var university = {
             name: $("#name").val().replace(/^\s+|\s+$/g, ""),
@@ -127,7 +123,6 @@ function deleteInformation() {
         $.post(SERVER_URL + '/delete/' + key, university, function (data) {
             // code when succeeded
             // data can contain the returned data from server
-            debugger;
             alert(data);
         })
             .fail(function (error) {
