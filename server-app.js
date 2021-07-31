@@ -105,13 +105,13 @@ app.get('/find/:name', function (req, res) {
         }//end if
 
         var dbo = db.db(database);
-        dbo.collection("university").findOne(universityquery, function (err, result) {
+        dbo.collection("university").find(universityquery).toArray(function (err, result) {
             if (err) throw err;
             if (result == null) {
                 console.log("not find any university named " + universityName);
-                res.send("not find any university named " + universityName);
+                res.send();
             } else {
-                console.log(result.name);
+                console.log(result);
                 res.send(result);
             }
 

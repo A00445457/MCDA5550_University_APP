@@ -101,7 +101,12 @@ function searchInfo() {
     $.get(SERVER_URL + '/find/' + universityName, function (data) {
         // code when succeeded
         // data can contain the returned data from server
-        display([data]);
+        if (data.length > 0) {
+            display(data);
+        } else {
+            alert("No university named " + universityName + " in database.");
+        }
+
     })
         .fail(function (error) {
             // code when failed
