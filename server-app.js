@@ -139,7 +139,7 @@ app.post('/delete/:name', (req, res) => {
             if (err) throw err;
             if (obj.deletedCount < 1) {
                 console.log("no university deleted");
-                res.send("no university deleted");
+                res.send("No university deleted, please check the university name.");
             } else {
                 console.log("1 document deleted");
                 res.send("1 university deleted");
