@@ -23,15 +23,32 @@ var port = '27017'; // Default MongoDB port for all the students
 var connectionString = 'mongodb://' + user + ':' + password + '@' +
     host + ':' + port + '/' + database;
 
+//CORS Middleware, causes Express to allow Cross-Origin Requests
+// Do NOT change anything here
+var allowCrossDomain = function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+};
 
 
 
-
+//set up the server variables
 var app = express();
 // add middleware for json interpret
 app.use(express.json());
-app.use(express.urlencoded());
-app.use(cors())
+// app.use(express.urlencoded());
+// app.use(cors())
+
+
+app.use(express.bodyParser());
+app.use(allowCrossDomain);
+app.use('/scripts', express.static(__dirname + '/scripts'));
+app.use('/css', express.static(__dirname + '/css'));
+app.use(express.static(__dirname));
+
+
 
 
 
@@ -106,7 +123,7 @@ app.get('/find/:name', function (req, res) {
 });
 
 // delete university
-app.delete('/delete/:name', (req, res) => {
+app.post('/delete/:name', (req, res) => {
     let universityName = req.params.name;
     var universityquery = { name: universityName };
     mongodb.connect(connectionString, function (error, db) {
