@@ -36,12 +36,8 @@ var allowCrossDomain = function (req, res, next) {
 
 //set up the server variables
 var app = express();
-// add middleware for json interpret
+// add middleware for json interpret and cros domain 
 app.use(express.json());
-// app.use(express.urlencoded());
-// app.use(cors())
-
-
 app.use(express.bodyParser());
 app.use(allowCrossDomain);
 app.use('/scripts', express.static(__dirname + '/scripts'));
