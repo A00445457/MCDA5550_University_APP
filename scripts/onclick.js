@@ -8,9 +8,9 @@ function saveInformation() {
     if (validateUniversityInfo()) {
         //create an university
         var university = {
-            name: $("#name").val(),
-            address: $("#address").val(),
-            phone: $("#phone").val()
+            name: $("#name").val().replace(/^\s+|\s+$/g, ""),
+            address: $("#address").val().replace(/^\s+|\s+$/g, ""),
+            phone: $("#phone").val().replace(/^\s+|\s+$/g, "")
         };
         var test = { name: "John", age: 30, city: "New York" };
         var parameter1 = JSON.stringify(test);
@@ -32,9 +32,9 @@ function saveInformation() {
 function validateUniversityInfo() {
 
     //first get the values from the fields 
-    var name = $("#name").val();
-    var address = $("#address").val();
-    var phone = $("#phone").val();
+    var name = $("#name").val().replace(/^\s+|\s+$/g, "");
+    var address = $("#address").val().replace(/^\s+|\s+$/g, "");
+    var phone = $("#phone").val().replace(/^\s+|\s+$/g, "");
 
     //check empty fields
     if (name == '') {
@@ -88,16 +88,14 @@ function validateUniversityInfo() {
 function searchInfo() {
     debugger;
     //validate search input
-    var search = $("#search").val();
+    var universityName = $("#search").val().replace(/^\s+|\s+$/g, "");
 
     //check empty fields
-    if (search == '') {
+    if (universityName == '') {
         alert("Please enter the name of searching university!");
         $("#search").focus();
         return false;
     }
-    debugger;
-    var universityName = $("#search").val();
     $.get(SERVER_URL + '/find/' + universityName, function (data) {
         // code when succeeded
         // data can contain the returned data from server
@@ -120,12 +118,12 @@ function deleteInformation() {
     debugger;
     if (validateUniversityInfo()) {
         var university = {
-            name: $("#name").val(),
-            address: $("#address").val(),
-            phone: $("#phone").val()
+            name: $("#name").val().replace(/^\s+|\s+$/g, ""),
+            address: $("#address").val().replace(/^\s+|\s+$/g, ""),
+            phone: $("#phone").val().replace(/^\s+|\s+$/g, "")
         };
         //first grab the name of the university
-        var key = $('#name').val();
+        var key = $('#name').val().replace(/^\s+|\s+$/g, "");
         $.post(SERVER_URL + '/delete/' + key, university, function (data) {
             // code when succeeded
             // data can contain the returned data from server
@@ -143,7 +141,6 @@ function deleteInformation() {
 
 
 function displayRecords() {
-    var universityName = $("#search").val();
     $.get(SERVER_URL + '/queryuniversitylist', function (data) {
         // code when succeeded
         // data can contain the returned data from server
